@@ -1,10 +1,84 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+
+
+<h2>Добро пожаловать!</h2>
+<h3>Чтобы продолжить, заполните нашу простую форму:</h3>
+<p-dropdown [options]="rates" [(ngModel)]="selectedRate"></p-dropdown>
+
+<div *ngIf="loadingrates">
+  Loading...
 </div>
+<div *ngIf="errorrates">
+  Error :(
+</div>
+<div *ngIf="rates">
+  <div *ngFor="let rate of rates">
+    <p>{{rate.currency}}: {{rate.rate}}</p>
+  </div>
+</div>
+
+<div *ngIf="loadingcountries">
+  Loading...
+</div>
+<div *ngIf="errorcountries">
+  Error :(
+</div>
+<div *ngIf="countries">
+  <div *ngFor="let country of countries">
+    <p>{{country.native}}: {{country.emoji}}</p>
+  </div>
+</div>
+
+
+
+
+
+
+<h3 class="first">Addons</h3>
+<div class="ui-g ui-fluid">
+  <div class="ui-g-12 ui-md-4">
+    <div class="ui-inputgroup">
+      <span class="ui-inputgroup-addon"><i class="fa fa-user"></i></span>
+      <input type="text" pInputText placeholder="Username">
+    </div>
+  </div>
+
+  <div class="ui-g-12 ui-md-4">
+    <div class="ui-inputgroup">
+      <span class="ui-inputgroup-addon">$</span>
+      <input type="text" pInputText placeholder="Price">
+      <span class="ui-inputgroup-addon">.00</span>
+    </div>
+  </div>
+
+  <div class="ui-g-12 ui-md-4">
+    <div class="ui-inputgroup">
+      <span class="ui-inputgroup-addon">www</span>
+      <input type="text" pInputText placeholder="Website">
+    </div>
+  </div>
+</div>
+
+<h3 class="first">Multiple addons</h3>
+<div class="ui-g">
+  <div class="ui-g-12">
+    <div class="ui-inputgroup">
+      <span class="ui-inputgroup-addon"><i class="fa fa-credit-card"></i></span>
+      <span class="ui-inputgroup-addon"><i class="fa fa-cc-visa"></i></span>
+      <input type="text" pInputText placeholder="Price">
+      <span class="ui-inputgroup-addon">$</span>
+      <span class="ui-inputgroup-addon">.00</span>
+    </div>
+  </div>
+</div>
+
+<p-button label="Click" icon="fa fa-user"></p-button>
+
+<div class="ui-g" style="width:250px;margin-bottom:10px">
+  <div class="ui-g-12"><p-radioButton name="group1" value="val1" label="Вариант 1" [(ngModel)]="selectedValue"></p-radioButton></div>
+  <div class="ui-g-12"><p-radioButton name="group1" value="val2" label="Вариант 2" [(ngModel)]="selectedValue"></p-radioButton></div>
+  <div class="ui-g-12"><p-radioButton name="group1" value="val3" label="Вариант 3" [(ngModel)]="selectedValue"></p-radioButton></div>
+</div>
+
 <h2>Here are some links to help you start: </h2>
 <ul>
   <li>
