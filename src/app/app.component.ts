@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
+import {IRegistration} from './model/i-registration';
 
 @Component({
   selector: 'app-root',
@@ -10,68 +11,107 @@ import gql from 'graphql-tag';
 })
 
 export class AppComponent implements OnInit {
-  rates: SelectItem[] = [];
-  loadingrates = true;
-  errorrates: any;
-  countries: SelectItem[] = [];
-  loadingcountries = true;
-  errorcountries: any;
-  selectedValue = 'val2';
-  selectedRate: SelectItem | null = null;
-  selection: SelectItem[];
-  selectedCurrency = 'RUB';
+  planets: SelectItem[] = [{label: 'Select your home planet', value: null}];
+  selPlanet: SelectItem | null = null;
+  races: SelectItem[] = [{label: 'Select your race', value: null}];
+  selRace: SelectItem | null = null;
+
+  flights: String[] = [];
+
+  model: IRegistration;
+
+  submitted = false;
+
+  onSubmit() {
+    console.log(this.submitted);
+    this.submitted = true;
+  }
+
 
   constructor(private apollo: Apollo) {
-    this.selection = [
-      {label: 'Select City', value: null},
-      {label: 'New York', value: {id: 1, name: 'New York', code: 'NY'}},
-      {label: 'Rome', value: {id:  2, name: 'Rome', code: 'RM'}},
-      {label: 'London', value: {id: 3, name: 'London', code: 'LDN'}}
-    ];
   }
 
   ngOnInit() {
+    this.model = {
+      name: null,
+      age: null,
+      planet: null,
+      race: null,
+      gender: ''
+    }
+
     this.apollo
       .watchQuery({
         query: gql`
           {
-            rates(currency: "${this.selectedCurrency}") {
-              currency
-              rate
+            allPlanets {
+              planets {
+                name
+                id
+              }
             }
           }
         `,
       })
       .valueChanges.subscribe(result => {
-        if (result.data && result.data.rates) {
-          // this.rates
-        }
-        console.log(result)
-        this.rates = result.data.rates;
-        this.loadingrates = result.loading;
-        this.errorrates = result.errors;
-
+        this.planets = this.planets.concat(result.data.allPlanets.planets.map(i => {
+          return {label: i.name, value: i.id};
+        }));
       });
 
     this.apollo
       .watchQuery({
         query: gql`
           {
-            countries {
-              native
-              emoji
+            allSpecies {
+              species {
+                name
+                id
+              }
             }
           }
         `,
       })
       .valueChanges.subscribe(result => {
-        this.countries = result.data.countries;
-        this.loadingcountries = result.loading;
-        this.errorcountries = result.errors;
+        this.races = this.races.concat(result.data.allSpecies.species.map(i => {
+          return {label: i.name, value: i.id};
+        }));
+      });
+
+    this.apollo
+      .watchQuery({
+        query: gql`
+          {
+            allStarships {
+              starships {
+                model
+                name
+                starshipClass
+                passengers
+              }
+            }
+            allPlanets {
+              planets {
+                name
+              }
+            }
+          }
+        `,
+      })
+      .valueChanges.subscribe(result => {
+        this.flights = result.data.allStarships.starships.map(i => {
+          const planets = result.data.allPlanets.planets;
+          i.planet = planets[Math.floor(Math.random() * planets.length)].name;
+          return i;
+        });
       });
   }
 
-  changeCurrency(newCurrency: string) {
-    this.selectedCurrency = newCurrency;
+  getSelectedPlanet() {
+    return this.planets.find(i => i.value === this.model.planet).label;
+  }
+
+  getSelectedRace() {
+    return this.races.find(i => i.value === this.model.race).label;
   }
 }

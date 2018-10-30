@@ -1,95 +1,97 @@
+<div [hidden]="submitted" class="reg-form">
 
-
-<h2>Добро пожаловать!</h2>
-<h3>Чтобы продолжить, заполните нашу простую форму:</h3>
-<p-dropdown [options]="rates" [(ngModel)]="selectedRate"></p-dropdown>
-
-<div *ngIf="loadingrates">
-  Loading...
-</div>
-<div *ngIf="errorrates">
-  Error :(
-</div>
-<div *ngIf="rates">
-  <div *ngFor="let rate of rates">
-    <p>{{rate.currency}}: {{rate.rate}}</p>
+  <div class="reg-form__header">
+    <h2>Welcome to the Mos Eisley Spaceport!</h2>
+    <h3>Please, fill out the registration form</h3>
   </div>
-</div>
 
-<div *ngIf="loadingcountries">
-  Loading...
-</div>
-<div *ngIf="errorcountries">
-  Error :(
-</div>
-<div *ngIf="countries">
-  <div *ngFor="let country of countries">
-    <p>{{country.native}}: {{country.emoji}}</p>
-  </div>
-</div>
-
-
+  <form (ngSubmit)="onSubmit()" #registrationForm="ngForm">
+    <div class="reg-form__content">
+      <div class="reg-form__group">
+        <div class="col-xs-3">
+          <label for="name">Name</label>
+        </div>
+        <div class="col-xs-9 pull-left">
+          <input type="text" pInputText placeholder="Your name" id="name" [(ngModel)]="model.name" name="name" #name="ngModel" required>
+          <div [hidden]="name.valid || name.pristine" class="alert alert-danger">
+            Please, input your name here
+          </div>
+        </div>
 
 
+      </div>
 
+      <div class="form-group">
+        <label for="age">Age</label>
+        <input type="number" pInputText placeholder="Your age" id="age" [(ngModel)]="model.age" name="age" #age="ngModel" required>
+        <div [hidden]="age.valid || age.pristine" class="alert alert-danger">
+          Please, input your age here
+        </div>
+      </div>
 
-<h3 class="first">Addons</h3>
-<div class="ui-g ui-fluid">
-  <div class="ui-g-12 ui-md-4">
-    <div class="ui-inputgroup">
-      <span class="ui-inputgroup-addon"><i class="fa fa-user"></i></span>
-      <input type="text" pInputText placeholder="Username">
+      <div class="form-group">
+        <label for="planet">Home planet</label>
+        <p-dropdown [options]="planets" id="planet" [(ngModel)]="model.planet" name="planet" #planet="ngModel" required></p-dropdown>
+        <div [hidden]="planet.valid || planet.pristine" class="alert alert-danger">
+          Please, select your home planet
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="race">Race</label>
+        <p-dropdown [options]="races" id="race" [(ngModel)]="model.race" name="race" #race="ngModel" required></p-dropdown>
+        <div [hidden]="race.valid || race.pristine" class="alert alert-danger">
+          Please, select your race
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="gender">Gender</label>
+        <div class="ui-g" id="gender" style="width:250px;margin-bottom:10px">
+          <div class="ui-g-12"><p-radioButton name="group1" value="male" label="Male" [(ngModel)]="model.gender" required></p-radioButton></div>
+          <div class="ui-g-12"><p-radioButton name="group1" value="female" label="Female" [(ngModel)]="model.gender" required></p-radioButton></div>
+          <div class="ui-g-12"><p-radioButton name="group1" value="other" label="Other" [(ngModel)]="model.gender" required></p-radioButton></div>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <div class="ui-g-12 ui-md-4">
-    <div class="ui-inputgroup">
-      <span class="ui-inputgroup-addon">$</span>
-      <input type="text" pInputText placeholder="Price">
-      <span class="ui-inputgroup-addon">.00</span>
+    <div class="reg-form__footer">
+      <p-button type="submit" label="Confirm" [disabled]="!registrationForm.form.valid" styleClass="ui-button-warning"></p-button>
     </div>
-  </div>
+  </form>
 
-  <div class="ui-g-12 ui-md-4">
-    <div class="ui-inputgroup">
-      <span class="ui-inputgroup-addon">www</span>
-      <input type="text" pInputText placeholder="Website">
-    </div>
-  </div>
 </div>
 
-<h3 class="first">Multiple addons</h3>
-<div class="ui-g">
-  <div class="ui-g-12">
-    <div class="ui-inputgroup">
-      <span class="ui-inputgroup-addon"><i class="fa fa-credit-card"></i></span>
-      <span class="ui-inputgroup-addon"><i class="fa fa-cc-visa"></i></span>
-      <input type="text" pInputText placeholder="Price">
-      <span class="ui-inputgroup-addon">$</span>
-      <span class="ui-inputgroup-addon">.00</span>
-    </div>
+<div [hidden]="!submitted">
+  <h5>Your registration info:</h5>
+  <div class="row">
+    <div class="col-xs-3">Name</div>
+    <div class="col-xs-9  pull-left">{{ model.name }}</div>
   </div>
+  <div class="row">
+    <div class="col-xs-3">Age</div>
+    <div class="col-xs-9 pull-left">{{ model.age }}</div>
+  </div>
+  <div class="row">
+    <div class="col-xs-3">Planet</div>
+    <div class="col-xs-9 pull-left">{{ getSelectedPlanet() }}</div>
+  </div>
+  <div class="row">
+    <div class="col-xs-3">Race</div>
+    <div class="col-xs-9 pull-left">{{ getSelectedRace() }}</div>
+  </div>
+  <div class="row">
+    <div class="col-xs-3">Gender</div>
+    <div class="col-xs-9 pull-left">{{ model.gender }}</div>
+  </div>
+
+  <p-button label="Edit" (click)="submitted=false" styleClass="ui-button-warning"></p-button>
+
+  <h4>Select your flight:</h4>
+  <div *ngFor="let flight of flights">
+    {{flight.model}} - {{flight.name}} - {{flight.starshipClass}} - {{flight.passengers}} - {{flight.planet}}
+  </div>
+
+
 </div>
 
-<p-button label="Click" icon="fa fa-user"></p-button>
-
-<div class="ui-g" style="width:250px;margin-bottom:10px">
-  <div class="ui-g-12"><p-radioButton name="group1" value="val1" label="Вариант 1" [(ngModel)]="selectedValue"></p-radioButton></div>
-  <div class="ui-g-12"><p-radioButton name="group1" value="val2" label="Вариант 2" [(ngModel)]="selectedValue"></p-radioButton></div>
-  <div class="ui-g-12"><p-radioButton name="group1" value="val3" label="Вариант 3" [(ngModel)]="selectedValue"></p-radioButton></div>
-</div>
-
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
-
-<router-outlet></router-outlet>
