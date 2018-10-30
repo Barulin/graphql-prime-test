@@ -4,6 +4,44 @@ import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 import {IRegistration} from './model/i-registration';
 
+
+type Planets = {
+  name: string,
+  id: string
+};
+type AllPlanets = {
+  planets: Planets[];
+};
+type PlanetsResponse = {
+  allPlanets: AllPlanets;
+};
+
+type Species = {
+  name: string,
+  id: string
+};
+type AllSpecies = {
+  species: Species[];
+};
+type SpeciesResponse = {
+  allSpecies: AllSpecies;
+};
+
+type Starships = {
+  model: string,
+  name: string,
+  starshipClass: string,
+  passengers: string,
+  planet: string
+};
+type AllStarships = {
+  starships: Starships[];
+};
+type FlightsResponse = {
+  allStarships: AllStarships;
+  allPlanets: AllPlanets;
+};
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -41,7 +79,7 @@ export class AppComponent implements OnInit {
     }
 
     this.apollo
-      .watchQuery({
+      .watchQuery<PlanetsResponse>({
         query: gql`
           {
             allPlanets {
@@ -60,7 +98,7 @@ export class AppComponent implements OnInit {
       });
 
     this.apollo
-      .watchQuery({
+      .watchQuery<SpeciesResponse>({
         query: gql`
           {
             allSpecies {
@@ -79,7 +117,7 @@ export class AppComponent implements OnInit {
       });
 
     this.apollo
-      .watchQuery({
+      .watchQuery<FlightsResponse>({
         query: gql`
           {
             allStarships {
